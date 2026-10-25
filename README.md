@@ -2,6 +2,8 @@
 
 Sistema web para controlar el inventario de útiles de oficina en pequeñas empresas y oficinas.
 
+**Aplicación publicada:** [https://gabmalf.github.io/stockoficina-ia/](https://gabmalf.github.io/stockoficina-ia/)
+
 ## Problemática
 
 El registro manual dificulta conocer las existencias, detectar faltantes a tiempo y mantener un control claro de las entradas y salidas. Esto puede causar inventarios desactualizados y reposiciones tardías.
@@ -53,7 +55,7 @@ StockOficina/
 1. Descarga o clona el repositorio.
 2. Abre `index.html` en un navegador moderno.
 
-No se requiere instalación de paquetes ni compilación. El proyecto contiene archivos estáticos y puede alojarse en servicios compatibles con sitios estáticos. **GitHub Pages aún no está configurado.**
+No se requiere instalación de paquetes ni compilación. El proyecto contiene archivos estáticos y se publica mediante GitHub Pages.
 
 ## Uso de GitHub Copilot y decisiones del desarrollador
 
@@ -78,4 +80,10 @@ No se requiere instalación de paquetes ni compilación. El proyecto contiene ar
 
 ## Estado de publicación
 
-La configuración de GitHub Pages no forma parte de este proyecto todavía. La creación de un repositorio público y la publicación del código requieren autorización explícita.
+El repositorio público es [Gabmalf/stockoficina-ia](https://github.com/Gabmalf/stockoficina-ia). GitHub Pages está configurado con **Deploy from a branch**, rama `main` y carpeta `/(root)`. La URL pública es [https://gabmalf.github.io/stockoficina-ia/](https://gabmalf.github.io/stockoficina-ia/).
+
+### Publicación con GitHub Copilot
+
+- **Solicitud:** configurar GitHub Pages desde `main /(root)`, verificar el despliegue y documentar la URL solo después de confirmarla.
+- **Uso de Copilot:** se comprobó primero el estado del repositorio y, tras la autorización del usuario, se configuró Pages mediante GitHub CLI. Se verificaron el estado del build, las respuestas HTTP de la página y sus recursos, y la navegación en el navegador integrado.
+- **Verificación realizada:** el build de Pages terminó en estado `built` para el commit `71d0fa7944094e186bccb641e364205cfc9b2027`, y el workflow **pages build and deployment** finalizó con `success`. HTML, CSS y JavaScript respondieron HTTP 200. En el navegador público cargaron los estilos y el script, y se comprobó que Resumen, Inventario y Movimientos muestran cada uno solo su vista correspondiente. No se modificó la lógica de la aplicación ni se habilitaron pruebas automatizadas adicionales.
