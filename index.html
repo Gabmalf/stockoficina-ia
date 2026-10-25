@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f4f7fb">
+    <meta name="description" content="Controla los productos, existencias y movimientos de útiles de oficina.">
+    <title>StockOficina | Control de inventario</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Navegación principal">
+        <a class="brand" href="#inicio" data-view-link="inicio" aria-label="StockOficina, inicio">
+          <span class="brand-mark" aria-hidden="true">S</span>
+          <span>Stock<span class="brand-light">Oficina</span></span>
+        </a>
+        <div class="sidebar-label">MENÚ PRINCIPAL</div>
+        <nav class="navigation">
+          <a class="nav-link active" href="#inicio" data-view-link="inicio" aria-current="page"><span class="nav-icon" aria-hidden="true">▦</span>Resumen</a>
+          <a class="nav-link" href="#inventario" data-view-link="inventario"><span class="nav-icon" aria-hidden="true">▤</span>Inventario</a>
+          <a class="nav-link" href="#movimientos" data-view-link="movimientos"><span class="nav-icon" aria-hidden="true">↕</span>Movimientos</a>
+        </nav>
+        <div class="sidebar-note">
+          <span class="note-icon" aria-hidden="true">i</span>
+          <p>Tus datos se guardan de forma local en este navegador.</p>
+        </div>
+        <div class="sidebar-footer">CONTROL DE INVENTARIO<br><span>Gestión sencilla, cada día.</span></div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">GESTIÓN DE INVENTARIO</p>
+            <h1 id="page-title">Resumen general</h1>
+          </div>
+          <button class="button button-primary" type="button" data-open-product data-action-in-view="inventario" hidden>
+            <span aria-hidden="true">＋</span> Nuevo producto
+          </button>
+        </header>
+
+        <div class="content-wrap">
+          <section class="app-view" id="inicio" data-view="inicio" aria-labelledby="welcome-title">
+          <section class="welcome-panel" aria-labelledby="welcome-title">
+            <div>
+              <p class="welcome-kicker">STOCKOFICINA</p>
+              <h2 id="welcome-title">Todo tu inventario,<br>en un solo lugar.</h2>
+              <p>Controla tus útiles de oficina y mantén cada recurso bajo control.</p>
+              <a class="welcome-link" href="#inventario" data-view-link="inventario">Ver inventario <span aria-hidden="true">→</span></a>
+            </div>
+            <div class="welcome-art" aria-hidden="true">
+              <span class="art-sheet sheet-back"></span>
+              <span class="art-sheet sheet-front"><i></i><i></i><i></i></span>
+              <span class="art-pencil"></span>
+              <span class="art-circle"></span>
+            </div>
+            <span class="welcome-decoration" aria-hidden="true"></span>
+          </section>
+
+          <section class="metrics-grid" aria-label="Indicadores del inventario">
+            <article class="metric-card">
+              <div class="metric-heading"><span>Productos registrados</span><span class="metric-icon icon-purple" aria-hidden="true">▤</span></div>
+              <p class="metric-value" id="total-products">0</p>
+              <p class="metric-caption">Productos en el inventario</p>
+            </article>
+            <article class="metric-card">
+              <div class="metric-heading"><span>Unidades disponibles</span><span class="metric-icon icon-blue" aria-hidden="true">▦</span></div>
+              <p class="metric-value" id="total-units">0</p>
+              <p class="metric-caption">Unidades en existencia</p>
+            </article>
+            <article class="metric-card">
+              <div class="metric-heading"><span>Stock bajo</span><span class="metric-icon icon-orange" aria-hidden="true">!</span></div>
+              <p class="metric-value" id="low-stock-count">0</p>
+              <p class="metric-caption">Productos que requieren atención</p>
+            </article>
+          </section>
+
+          <section class="panel alerts-panel" aria-labelledby="alerts-title">
+            <div class="panel-heading">
+              <div><p class="eyebrow">ATENCIÓN</p><h2 id="alerts-title">Alertas de stock bajo</h2></div>
+              <a class="button button-outline" href="#inventario" data-view-link="inventario">Ver inventario</a>
+            </div>
+            <div class="low-stock-list" id="low-stock-list"></div>
+            <p class="movement-empty" id="alerts-empty">No hay productos con stock bajo.</p>
+          </section>
+          </section>
+
+          <section class="app-view" id="inventario" data-view="inventario" aria-labelledby="inventory-title" hidden>
+          <section class="panel inventory-panel" aria-labelledby="inventory-title">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">TUS PRODUCTOS</p>
+                <h2 id="inventory-title">Inventario</h2>
+              </div>
+              <button class="button button-outline" type="button" data-open-product><span aria-hidden="true">＋</span> Agregar producto</button>
+            </div>
+            <div class="filters">
+              <label class="search-control">
+                <span class="sr-only">Buscar por nombre</span>
+                <span aria-hidden="true">⌕</span>
+                <input id="search-input" type="search" placeholder="Buscar producto..." autocomplete="off">
+              </label>
+              <label class="select-control">
+                <span class="sr-only">Filtrar por categoría</span>
+                <select id="category-filter">
+                  <option value="">Todas las categorías</option>
+                </select>
+              </label>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">PRODUCTO</th>
+                    <th scope="col">CATEGORÍA</th>
+                    <th scope="col">CANTIDAD</th>
+                    <th scope="col">ESTADO</th>
+                    <th scope="col"><span class="sr-only">Acciones</span></th>
+                  </tr>
+                </thead>
+                <tbody id="inventory-body"></tbody>
+              </table>
+              <div class="empty-state" id="empty-state">
+                <span class="empty-icon" aria-hidden="true">▤</span>
+                <h3 id="empty-title">Aún no hay productos</h3>
+                <p id="empty-description">Agrega tu primer producto para comenzar a organizar el inventario.</p>
+                <button class="button button-primary button-small" type="button" data-open-product>＋ Agregar producto</button>
+              </div>
+            </div>
+          </section>
+          </section>
+
+          <section class="app-view" id="movimientos" data-view="movimientos" aria-labelledby="movements-title" hidden>
+          <section class="panel movements-panel" aria-labelledby="movements-title">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">HISTORIAL</p>
+                <h2 id="movements-title">Movimientos recientes</h2>
+              </div>
+              <button class="button button-outline" id="open-movement" type="button">＋ Registrar movimiento</button>
+            </div>
+            <div class="movement-list" id="movement-list"></div>
+            <p class="movement-empty" id="movement-empty">Todavía no hay movimientos registrados.</p>
+          </section>
+          </section>
+          <p class="storage-status" id="storage-status" role="status" aria-live="polite"></p>
+        </div>
+      </main>
+    </div>
+
+    <dialog class="app-dialog" id="product-dialog" aria-labelledby="product-dialog-title">
+      <form id="product-form">
+        <div class="dialog-heading">
+          <div><p class="eyebrow">INVENTARIO</p><h2 id="product-dialog-title">Nuevo producto</h2></div>
+          <button class="icon-button" type="button" data-close-dialog aria-label="Cerrar">×</button>
+        </div>
+        <input id="product-id" type="hidden">
+        <label class="form-field">Nombre del producto
+          <input id="product-name" name="name" type="text" maxlength="80" required>
+        </label>
+        <label class="form-field">Categoría
+          <select id="product-category" name="category" required>
+            <option value="">Selecciona una categoría</option>
+            <option>Papelería</option>
+            <option>Escritura</option>
+            <option>Archivo</option>
+            <option>Tecnología</option>
+            <option>Accesorios</option>
+            <option>Limpieza</option>
+            <option>Otros</option>
+          </select>
+        </label>
+        <div class="form-row">
+          <label class="form-field">Cantidad inicial
+            <input id="product-quantity" name="quantity" type="number" min="0" step="1" required inputmode="numeric">
+          </label>
+          <label class="form-field">Stock mínimo
+            <input id="product-minimum" name="minimum" type="number" min="0" step="1" required inputmode="numeric">
+          </label>
+        </div>
+        <label class="form-field">Descripción <span class="optional-label">(opcional)</span>
+          <textarea id="product-description" name="description" rows="3" maxlength="300"></textarea>
+        </label>
+        <p class="form-error" id="product-error" role="alert"></p>
+        <div class="dialog-actions">
+          <button class="button button-outline" type="button" data-close-dialog>Cancelar</button>
+          <button class="button button-primary" type="submit">Guardar producto</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="app-dialog" id="movement-dialog" aria-labelledby="movement-dialog-title">
+      <form id="movement-form">
+        <div class="dialog-heading">
+          <div><p class="eyebrow">CONTROL DE EXISTENCIAS</p><h2 id="movement-dialog-title">Registrar movimiento</h2></div>
+          <button class="icon-button" type="button" data-close-dialog aria-label="Cerrar">×</button>
+        </div>
+        <label class="form-field">Producto
+          <select id="movement-product" name="product" required></select>
+        </label>
+        <label class="form-field">Tipo de movimiento
+          <select id="movement-type" name="type" required>
+            <option value="entrada">Entrada</option>
+            <option value="salida">Salida</option>
+          </select>
+        </label>
+        <label class="form-field">Cantidad de unidades
+          <input id="movement-quantity" name="quantity" type="number" min="1" step="1" required inputmode="numeric">
+        </label>
+        <p class="form-error" id="movement-error" role="alert"></p>
+        <div class="dialog-actions">
+          <button class="button button-outline" type="button" data-close-dialog>Cancelar</button>
+          <button class="button button-primary" type="submit">Guardar movimiento</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
